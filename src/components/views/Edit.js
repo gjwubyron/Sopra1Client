@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import User from 'models/User';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
 import 'styles/views/Login.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+
 
 /*
 It is possible to add multiple components inside a single file,
@@ -35,45 +36,24 @@ FormField.propTypes = {
   onChange: PropTypes.func
 };
 
-const Login = props => {
+const Edit = props => {
+  const { id } = useParams()
   const history = useHistory();
-  const [password, setPassword] = useState(null);
+  const [birthday, setBirthday] = useState(null);
   const [username, setUsername] = useState(null);
+  const dateReg = /^\d{4}-\d{2}-\d{2}$/
 
-  const doRegister = async () => {
+  const doUpdate = async () => {
     try {
-      const requestBody = JSON.stringify({username, password});
-      const response = await api.post('/users', requestBody);
+      if(!birthday.match(dateReg)){throw new Error("Incorrect format for birthday YYYY-MM-DD");}
+      const requestBody = JSON.stringify({username, birthday});
+      const response = await api.put('/users/'+ id, requestBody);
 
-      // Get the returned user and update a new object.
-      const user = new User(response.data);
-
-      // Store the token into the local storage.
-      localStorage.setItem('token', user.token);
-
-      // Login successfully worked --> navigate to the route /game in the GameRouter
-      history.push(`/game`);
+      history.push(`/profile/` + id);
     } catch (error) {
-      alert(`Something went wrong during the login: \n${handleError(error)}`);
+      alert(`Something went wrong during the updating: \n${handleError(error)}`);
     }
   };
-  const doLogin = async () => {
-      try {
-        const requestBody = JSON.stringify({username, password});
-        const response = await api.post('/registered-users', requestBody);
-
-        // Get the returned user and update a new object.
-        const user = new User(response.data);
-
-        // Store the token into the local storage.
-        localStorage.setItem('token', user.token);
-
-        // Login successfully worked --> navigate to the route /game in the GameRouter
-        history.push(`/game`);
-      } catch (error) {
-        alert(`Something went wrong during the login: \n${handleError(error)}`);
-      }
-    };
 
   return (
     <BaseContainer>
@@ -85,24 +65,17 @@ const Login = props => {
             onChange={un => setUsername(un)}
           />
           <FormField
-            label="Password"
-            value={password}
-            onChange={n => setPassword(n)}
+            label="Birthday"
+            value={birthday}
+            onChange={n => setBirthday(n)}
           />
           <div className="login button-container">
             <Button
-              disabled={!username || !password}
-              width="50%"
-              onClick={() => doLogin()}
+              disabled={!username || !birthday}
+              width="100%"
+              onClick={() => doUpdate()}
             >
-              Login
-            </Button>
-            <Button
-              disabled={!username || !password}
-              width="50%"
-              onClick={() => doRegister()}
-            >
-             Register
+              Update
             </Button>
           </div>
         </div>
@@ -115,4 +88,4 @@ const Login = props => {
  * You can get access to the history object's properties via the withRouter.
  * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
  */
-export default Login;
+export default Edit;
