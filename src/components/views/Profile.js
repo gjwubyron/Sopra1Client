@@ -51,7 +51,7 @@ const Profile = () => {
           }
         }
           fetchData();
-          }, []);
+          }, [id]);
 
     let content = <Spinner/>;
 

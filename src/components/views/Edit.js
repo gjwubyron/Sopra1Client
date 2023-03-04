@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {api, handleError} from 'helpers/api';
-import User from 'models/User';
 import {useHistory, useParams} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
 import 'styles/views/Login.scss';
@@ -47,7 +46,7 @@ const Edit = props => {
     try {
       if(!birthday.match(dateReg)){throw new Error("Incorrect format for birthday YYYY-MM-DD");}
       const requestBody = JSON.stringify({username, birthday});
-      const response = await api.put('/users/'+ id, requestBody);
+      await api.put('/users/'+ id, requestBody);
 
       history.push(`/profile/` + id);
     } catch (error) {
