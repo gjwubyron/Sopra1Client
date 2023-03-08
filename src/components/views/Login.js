@@ -53,7 +53,7 @@ const Login = props => {
 
       const status = "ONLINE"
       const renewBody = JSON.stringify({status});
-      await api.put('/users/'+ user.id + '?' + new URLSearchParams({'token' : user.token} ), renewBody);
+      await api.put('/users/'+ user.id + '?' + new URLSearchParams({'token' : user.token}), renewBody);
       // Login successfully worked --> navigate to the route /game in the GameRouter
       history.push(`/game`);
     } catch (error) {
