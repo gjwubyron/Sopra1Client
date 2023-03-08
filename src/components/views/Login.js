@@ -47,10 +47,13 @@ const Login = props => {
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
-
       // Store the token into the local storage.
       localStorage.setItem('token', user.token);
+      localStorage.setItem('id', user.id);
 
+      const status = "ONLINE"
+      const renewBody = JSON.stringify({status});
+      await api.put('/users/'+ user.id + '?' + new URLSearchParams({'token' : user.token} ), renewBody);
       // Login successfully worked --> navigate to the route /game in the GameRouter
       history.push(`/game`);
     } catch (error) {
@@ -67,6 +70,9 @@ const Login = props => {
 
         // Store the token into the local storage.
         localStorage.setItem('token', user.token);
+        const status = "ONLINE"
+        const renewBody = JSON.stringify({status});
+        await api.put('/users/'+ user.id + '?' + new URLSearchParams({'token' : user.token} ), renewBody);
 
         // Login successfully worked --> navigate to the route /game in the GameRouter
         history.push(`/game`);

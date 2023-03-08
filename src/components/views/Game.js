@@ -20,8 +20,14 @@ const Game = () => {
   // more information can be found under https://reactjs.org/docs/hooks-state.html
   const [users, setUsers] = useState(null);
 
-  const logout = () => {
+  const logout = async () => {
+    const status = "OFFLINE"
+    const requestBody = JSON.stringify({status});
+    const token = localStorage.getItem('token');
+    const id = localStorage.getItem('id');
+    await api.put('/users/'+ id + '?' + new URLSearchParams({'token' : token} ), requestBody);
     localStorage.removeItem('token');
+    localStorage.removeItem('id');
     history.push('/login');
   }
   const inspect = (id) => {
@@ -48,7 +54,11 @@ const Game = () => {
     // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
     async function fetchData() {
       try {
-        const response = await api.get('/users');
+
+        const token = localStorage.getItem('token');
+        localStorage.removeItem('token')
+        const response = await api.get('/users' + '?' + new URLSearchParams({'token' : token} ));
+        localStorage.setItem('token', token)
 
         // delays continuous execution of an async operation for 1 second.
         // This is just a fake async call, so that the spinner can be displayed

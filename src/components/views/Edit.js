@@ -44,9 +44,14 @@ const Edit = props => {
 
   const doUpdate = async () => {
     try {
-      if(!birthday.match(dateReg)){throw new Error("Incorrect format for birthday YYYY-MM-DD");}
+        if(birthday){
+           if(!birthday.match(dateReg)){
+           throw new Error("Incorrect format for birthday YYYY-MM-DD" + birthday);
+           }
+        }
       const requestBody = JSON.stringify({username, birthday});
-      await api.put('/users/'+ id, requestBody);
+      const token = localStorage.getItem('token')
+      await api.put('/users/'+ id + '?' + new URLSearchParams({'token' : token} ), requestBody);
 
       history.push(`/profile/` + id);
     } catch (error) {
@@ -70,7 +75,7 @@ const Edit = props => {
           />
           <div className="login button-container">
             <Button
-              disabled={!username || !birthday}
+             disabled={!username}
               width="100%"
               onClick={() => doUpdate()}
             >

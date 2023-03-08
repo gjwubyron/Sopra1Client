@@ -25,7 +25,8 @@ const Profile = () => {
         // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
         async function fetchData() {
           try {
-            const response = await api.get('/users/'+ id);
+            const token = localStorage.getItem('token')
+            const response = await api.get('/users/'+ id + '?' + new URLSearchParams({'token' : token} ));
 
             // delays continuous execution of an async operation for 1 second.
             // This is just a fake async call, so that the spinner can be displayed
