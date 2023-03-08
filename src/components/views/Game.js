@@ -31,7 +31,7 @@ const Game = () => {
     history.push('/login');
   }
   const inspect = (id) => {
-    history.push('/profile/' + id)
+    history.push('/profile/' + id);
   }
 
   const Player = ({user}) => (
@@ -56,9 +56,7 @@ const Game = () => {
       try {
 
         const token = localStorage.getItem('token');
-        localStorage.removeItem('token')
-        const response = await api.get('/users' + '?' + new URLSearchParams({'token' : token} ));
-        localStorage.setItem('token', token)
+        const response = await api.get('/users' + '?' + new URLSearchParams({'token' : token}));
 
         // delays continuous execution of an async operation for 1 second.
         // This is just a fake async call, so that the spinner can be displayed
