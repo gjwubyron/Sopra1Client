@@ -77,6 +77,7 @@ const Game = () => {
         console.log(response);
       } catch (error) {
         localStorage.removeItem('token');
+        history.push('/login');
         console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
         console.error("Details:", error);
         alert("Something went wrong while fetching the users! See the console for details.");
@@ -84,7 +85,7 @@ const Game = () => {
     }
 
     fetchData();
-  }, []);
+  }, [history]);
 
   let content = <Spinner/>;
 
